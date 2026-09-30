@@ -1,2 +1,16 @@
 __pycache__/
 *.pyc
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+
+# Spotify OAuth tokens and local album caches
+.cache*
+.spotify-dna-cache*
+.spotify-dna-album-cache*
+
+# Local Python environments
+.venv/
+venv/

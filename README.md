@@ -195,6 +195,10 @@ Create a playlist with up to 5 tracks per artist, instead of just one track.
 
 Use the older albums/singles sampling approach instead of search. This samples across an artist's whole discography rather than just their top search hits, at roughly double the API requests per artist; the artist's album list is cached locally afterward so repeated runs need fewer requests.
 
+**Always keep the album cache enabled when using `--track-source albums`.** The default cache lasts 30 days. Reuse the same cache file between runs and keep `--album-cache-ttl-days` greater than zero; deleting or disabling the cache forces the script to fetch those album lists again.
+
+With many followed artists, it can take several days of spaced-out runs before the cache fills and runs stop hitting rate limits. The script saves the album lists fetched so far even when it stops on a Spotify rate limit or quota error, so later runs can reuse that progress. Wait for the reported `Retry-After` period before trying again, and use a smaller `--max-tracks` if needed. The cache only stores album lists: album tracks still require API requests on every run, so caching does not guarantee that rate limits disappear.
+
 ```bash
 ./spotify_dna.py --track-source albums --album-attempts 1
 ```
@@ -207,11 +211,10 @@ Album cache: 200 artist(s) loaded from /Users/you/.spotify-dna-album-cache.json
 Album cache: 180 hit(s), 20 miss(es)
 ```
 
-Adjust or disable the album list cache:
+Adjust the album list cache lifetime while keeping caching enabled:
 
 ```bash
 ./spotify_dna.py --track-source albums --album-cache-ttl-days 7
-./spotify_dna.py --track-source albums --album-cache-ttl-days 0  # always refetch
 ```
 
 ### Create a Public Playlist
@@ -241,3 +244,7 @@ Use `--quiet` to suppress normal progress output, so cron only sends you mail wh
 ```
 
 `--quiet` and `--verbose` are mutually exclusive.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
